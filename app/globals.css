@@ -78,6 +78,46 @@ button {
   height: auto;
 }
 
+.agency-logo-fallback {
+  align-items: center;
+  background: #161616;
+  border-radius: 8px;
+  color: #ffffff;
+  display: inline-flex;
+  font-size: 28px;
+  font-weight: 800;
+  height: 54px;
+  justify-content: center;
+  width: 54px;
+}
+
+.login-page {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.login-card {
+  max-width: 460px;
+  width: 100%;
+}
+
+.login-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.login-form input {
+  background: #ffffff;
+  border: 1px solid rgba(22, 22, 22, 0.14);
+  border-radius: 8px;
+  color: #171717;
+  min-height: 46px;
+  padding: 0 12px;
+}
+
 .care-logo {
   font-size: clamp(2rem, 4vw, 3.1rem);
   font-weight: 300;

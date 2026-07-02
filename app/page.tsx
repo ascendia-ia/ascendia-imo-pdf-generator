@@ -1,5 +1,8 @@
 import PdfGenerator from "./pdf-generator";
+import { getClientBranding } from "@/lib/client-branding";
 
-export default function Home() {
-  return <PdfGenerator />;
+export default async function Home() {
+  const branding = await getClientBranding();
+
+  return <PdfGenerator branding={branding} />;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import type { ClientBranding } from "@/lib/client-branding";
 
 type Stage = "empty" | "editing";
 type BusyState = "idle" | "scraping" | "generating";
@@ -86,7 +87,7 @@ async function readError(response: Response, fallback: string) {
   return fallback;
 }
 
-export default function PdfGenerator() {
+export default function PdfGenerator({ branding }: { branding: ClientBranding | null }) {
   const [stage, setStage] = useState<Stage>("empty");
   const [busy, setBusy] = useState<BusyState>("idle");
   const [listingUrl, setListingUrl] = useState("");
@@ -330,15 +331,18 @@ export default function PdfGenerator() {
     <main className="page-shell">
       <section className="hero-tool editor-shell" aria-labelledby="page-title">
         <header className="topbar">
-          <div className="brand-mark" aria-label="CARE Real Estate">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className="agency-logo"
-              src="https://media.egorealestate.com/ORIGINAL/27b7d0cb-032b-4644-bc49-4de29b36138b.png"
-              alt="Logótipo da agência"
-            />
+          <div className="brand-mark" aria-label={branding?.name || "Ascendia"}>
+            {branding?.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img className="agency-logo" src={branding.logoUrl} alt="Logotipo do cliente" />
+            ) : (
+              <span className="agency-logo-fallback">A</span>
+            )}
           </div>
-          <div className="private-label">Dossier privado</div>
+          <div className="private-label">
+            {branding?.name || "Cliente Ascendia"}
+            {branding?.phone ? ` · ${branding.phone}` : ""}
+          </div>
         </header>
 
         <div className="editor-intro">
