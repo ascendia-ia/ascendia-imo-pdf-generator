@@ -62,9 +62,22 @@ O site envia para `N8N_PDF_WEBHOOK_URL`:
   "pricing": "100000€",
   "description": "Descricao editada",
   "images": ["https://...jpg"],
-  "sourceUrl": "https://www.idealista.pt/imovel/..."
+  "sourceUrl": "https://www.idealista.pt/imovel/...",
+  "consultant": {
+    "name": "Nome do cliente",
+    "phone": "+351 900 000 000",
+    "logoUrl": "https://.../storage/v1/object/public/client-assets/..."
+  },
+  "consultantName": "Nome do cliente",
+  "consultantPhone": "+351 900 000 000",
+  "consultantLogoUrl": "https://.../storage/v1/object/public/client-assets/..."
 }
 ```
+
+Os campos `consultantName`, `consultantPhone` e `consultantLogoUrl` sao
+duplicados na raiz para facilitar templates n8n. Se o workflow converter o logo
+para Base64/data URI, pode usar o campo `consultantLogoSrc`; o template prefere
+`consultantLogoSrc` e faz fallback para `consultantLogoUrl`.
 
 O n8n pode responder de duas formas.
 

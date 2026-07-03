@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getClientBranding } from "@/lib/client-branding";
 import { isValidHttpUrl, normalizeFeatures, normalizeImageUrls } from "../../listing-utils";
 
 export const runtime = "nodejs";
@@ -20,6 +21,17 @@ type PdfPayload = {
   description: string;
   images: string[];
   sourceUrl?: string;
+};
+
+type WebhookPayload = PdfPayload & {
+  consultant?: {
+    name?: string;
+    phone?: string;
+    logoUrl?: string;
+  };
+  consultantName?: string;
+  consultantPhone?: string;
+  consultantLogoUrl?: string;
 };
 
 type ValidationResult = { error: string } | { payload: PdfPayload };
@@ -136,6 +148,28 @@ function contentDispositionFromTitle(title: string) {
   return `attachment; filename="${filenameFromTitle(title)}"`;
 }
 
+async function buildWebhookPayload(payload: PdfPayload): Promise<WebhookPayload> {
+  const branding = await getClientBranding();
+
+  if (!branding) {
+    return payload;
+  }
+
+  const consultant = {
+    name: branding.name || undefined,
+    phone: branding.phone || undefined,
+    logoUrl: branding.logoUrl || undefined
+  };
+
+  return {
+    ...payload,
+    consultant,
+    consultantName: consultant.name,
+    consultantPhone: consultant.phone,
+    consultantLogoUrl: consultant.logoUrl
+  };
+}
+
 function validatePayload(body: GeneratePdfBody): ValidationResult {
   const title = typeof body.title === "string" ? body.title.trim() : "";
   const pricing = typeof body.pricing === "string" ? body.pricing.trim() : "";
@@ -201,13 +235,15 @@ export async function POST(request: Request) {
   const timeout = setTimeout(() => controller.abort(), 55000);
 
   try {
+    const webhookPayload = await buildWebhookPayload(validated.payload);
+
     const n8nResponse = await fetch(webhookUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/pdf, application/json"
       },
-      body: JSON.stringify(validated.payload),
+      body: JSON.stringify(webhookPayload),
       signal: controller.signal
     });
 

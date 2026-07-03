@@ -142,7 +142,15 @@
       <header class="header">
         <img
           class="agency-logo"
-          src="https://media.egorealestate.com/ORIGINAL/27b7d0cb-032b-4644-bc49-4de29b36138b.png"
+          src="{{ (() => {
+            const data = $json.body || $json;
+            const consultant = data.consultant || {};
+            return data.consultantLogoSrc ||
+              data.consultantLogoUrl ||
+              consultant.logoSrc ||
+              consultant.logoUrl ||
+              'https://media.egorealestate.com/ORIGINAL/27b7d0cb-032b-4644-bc49-4de29b36138b.png';
+          })() }}"
           alt="Logótipo da agência"
         />
         <div class="label">Dossier privado</div>
@@ -158,8 +166,13 @@
       })() }}
 
       <div class="consultant">
-        <strong>Leonardo Giestas</strong>
-        +351 913 740 456
+        {{ (() => {
+          const data = $json.body || $json;
+          const consultant = data.consultant || {};
+          const name = data.consultantName || consultant.name || 'Leonardo Giestas';
+          const phone = data.consultantPhone || consultant.phone || '+351 913 740 456';
+          return `<strong>${name}</strong>${phone}`;
+        })() }}
       </div>
 
       <img
