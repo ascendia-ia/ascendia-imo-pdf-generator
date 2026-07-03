@@ -143,8 +143,15 @@
         <img
           class="agency-logo"
           src="{{ (() => {
-            const data = $json.body || $json;
-            const consultant = data.consultant || {};
+            const current = $json.body || $json;
+            const webhookBody = (() => {
+              try {
+                return $('Webhook3').item.json.body || {};
+              } catch {
+                return {};
+              }
+            })();
+            const consultant = current.consultant || webhookBody.consultant || {};
             return consultant.logoSrc ||
               consultant.logoUrl ||
               '';
@@ -165,8 +172,15 @@
 
       <div class="consultant">
         {{ (() => {
-          const data = $json.body || $json;
-          const consultant = data.consultant || {};
+          const current = $json.body || $json;
+          const webhookBody = (() => {
+            try {
+              return $('Webhook3').item.json.body || {};
+            } catch {
+              return {};
+            }
+          })();
+          const consultant = current.consultant || webhookBody.consultant || {};
           const name = consultant.name || '';
           const phone = consultant.phone || '';
           return `<strong>${name}</strong>${phone}`;
