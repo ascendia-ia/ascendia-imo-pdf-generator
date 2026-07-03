@@ -28,10 +28,8 @@ type WebhookPayload = PdfPayload & {
     name?: string;
     phone?: string;
     logoUrl?: string;
+    logoSrc?: string;
   };
-  consultantName?: string;
-  consultantPhone?: string;
-  consultantLogoUrl?: string;
 };
 
 type ValidationResult = { error: string } | { payload: PdfPayload };
@@ -148,6 +146,31 @@ function contentDispositionFromTitle(title: string) {
   return `attachment; filename="${filenameFromTitle(title)}"`;
 }
 
+async function getImageDataUri(url: string | null) {
+  if (!url || !isValidHttpUrl(url)) {
+    return undefined;
+  }
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Accept: "image/avif,image/webp,image/png,image/jpeg,image/svg+xml,image/*"
+      }
+    });
+
+    const contentType = response.headers.get("content-type")?.split(";")[0] ?? "";
+
+    if (!response.ok || !contentType.toLowerCase().startsWith("image/")) {
+      return undefined;
+    }
+
+    const image = await response.arrayBuffer();
+    return `data:${contentType};base64,${Buffer.from(image).toString("base64")}`;
+  } catch {
+    return undefined;
+  }
+}
+
 async function buildWebhookPayload(payload: PdfPayload): Promise<WebhookPayload> {
   const branding = await getClientBranding();
 
@@ -155,18 +178,18 @@ async function buildWebhookPayload(payload: PdfPayload): Promise<WebhookPayload>
     return payload;
   }
 
+  const logoSrc = await getImageDataUri(branding.logoUrl);
+
   const consultant = {
     name: branding.name || undefined,
     phone: branding.phone || undefined,
-    logoUrl: branding.logoUrl || undefined
+    logoUrl: branding.logoUrl || undefined,
+    logoSrc
   };
 
   return {
     ...payload,
-    consultant,
-    consultantName: consultant.name,
-    consultantPhone: consultant.phone,
-    consultantLogoUrl: consultant.logoUrl
+    consultant
   };
 }
 

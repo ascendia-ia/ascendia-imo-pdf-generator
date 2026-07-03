@@ -145,11 +145,9 @@
           src="{{ (() => {
             const data = $json.body || $json;
             const consultant = data.consultant || {};
-            return data.consultantLogoSrc ||
-              data.consultantLogoUrl ||
-              consultant.logoSrc ||
+            return consultant.logoSrc ||
               consultant.logoUrl ||
-              'https://media.egorealestate.com/ORIGINAL/27b7d0cb-032b-4644-bc49-4de29b36138b.png';
+              '';
           })() }}"
           alt="Logótipo da agência"
         />
@@ -169,8 +167,8 @@
         {{ (() => {
           const data = $json.body || $json;
           const consultant = data.consultant || {};
-          const name = data.consultantName || consultant.name || 'Leonardo Giestas';
-          const phone = data.consultantPhone || consultant.phone || '+351 913 740 456';
+          const name = consultant.name || '';
+          const phone = consultant.phone || '';
           return `<strong>${name}</strong>${phone}`;
         })() }}
       </div>

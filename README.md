@@ -66,18 +66,15 @@ O site envia para `N8N_PDF_WEBHOOK_URL`:
   "consultant": {
     "name": "Nome do cliente",
     "phone": "+351 900 000 000",
-    "logoUrl": "https://.../storage/v1/object/public/client-assets/..."
-  },
-  "consultantName": "Nome do cliente",
-  "consultantPhone": "+351 900 000 000",
-  "consultantLogoUrl": "https://.../storage/v1/object/public/client-assets/..."
+    "logoUrl": "https://.../storage/v1/object/public/client-assets/...",
+    "logoSrc": "data:image/png;base64,..."
+  }
 }
 ```
 
-Os campos `consultantName`, `consultantPhone` e `consultantLogoUrl` sao
-duplicados na raiz para facilitar templates n8n. Se o workflow converter o logo
-para Base64/data URI, pode usar o campo `consultantLogoSrc`; o template prefere
-`consultantLogoSrc` e faz fallback para `consultantLogoUrl`.
+O campo `consultant.logoSrc` ja segue em Base64/data URI para renderizadores de
+PDF que nao carregam imagens externas. O campo `consultant.logoUrl` segue como
+fallback e para debugging.
 
 O n8n pode responder de duas formas.
 
