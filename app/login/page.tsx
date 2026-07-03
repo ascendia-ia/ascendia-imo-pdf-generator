@@ -40,7 +40,7 @@ export default function LoginPage() {
           <span className="dossier-photo" />
         </div>
         <div className="login-dossier secondary">
-          <span className="dossier-label">CARE</span>
+          <span className="dossier-label">Imo-PDF</span>
           <span className="dossier-line" />
           <span className="dossier-line short" />
         </div>

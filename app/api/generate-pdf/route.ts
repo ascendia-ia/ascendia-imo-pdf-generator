@@ -109,7 +109,7 @@ stream
 BT
 /F1 22 Tf
 72 760 Td
-(CARE PDF Generator) Tj
+(Ascendia Imo-PDF) Tj
 0 -34 Td
 (PDF de teste gerado com selecao de imagens.) Tj
 ET

@@ -1,4 +1,4 @@
-# CARE PDF Generator
+# Ascendia Imo-PDF
 
 MVP em Next.js para importar um anuncio imobiliario, rever titulo/descricao,
 selecionar imagens e gerar um PDF atraves de webhooks privados do n8n.
