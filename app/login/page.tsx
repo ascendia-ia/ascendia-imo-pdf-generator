@@ -31,31 +31,50 @@ export default function LoginPage() {
 
   return (
     <main className="page-shell login-page">
-      <section className="generator-panel login-card">
-        <p className="eyebrow">Ascendia</p>
-        <h1>Entrar no gerador de PDFs</h1>
-        <p className="lead">
-          Usa a mesma conta do portal para carregar o branding do cliente.
-        </p>
+      <section className="login-visual" aria-hidden="true">
+        <div className="login-dossier">
+          <span className="dossier-label">Dossier PDF</span>
+          <span className="dossier-line short" />
+          <span className="dossier-line" />
+          <span className="dossier-line" />
+          <span className="dossier-photo" />
+        </div>
+        <div className="login-dossier secondary">
+          <span className="dossier-label">CARE</span>
+          <span className="dossier-line" />
+          <span className="dossier-line short" />
+        </div>
+      </section>
+
+      <section className="login-card" aria-labelledby="login-title">
+        <p className="eyebrow">Ascendia / Acesso privado</p>
+        <h1 id="login-title">Entrar no gerador de PDFs</h1>
+        <p className="lead">Acede para preparar dossiers comerciais com o branding certo.</p>
 
         <form className="login-form" onSubmit={handleSubmit}>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-          />
+          <div className="login-field">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </div>
 
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
+          <div className="login-field">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+          </div>
 
           <button type="submit" disabled={busy}>
             {busy ? "A entrar" : "Entrar"}
