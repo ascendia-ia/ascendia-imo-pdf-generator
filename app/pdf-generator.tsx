@@ -272,12 +272,10 @@ export default function PdfGenerator({ branding }: { branding: ClientBranding | 
 
   function toggleImage(id: string) {
     setImages((current) =>
-      selectedFirst(
-        current.map((image) =>
-          image.id === id && !image.broken
-            ? { ...image, selected: !image.selected }
-            : image
-        )
+      current.map((image) =>
+        image.id === id && !image.broken
+          ? { ...image, selected: !image.selected }
+          : image
       )
     );
   }
