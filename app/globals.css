@@ -367,6 +367,7 @@ h1 {
 
 .editor-intro h1 {
   font-size: clamp(2.25rem, 5.4vw, 5rem);
+  line-height: 1.08;
 }
 
 .editor-intro .lead {
