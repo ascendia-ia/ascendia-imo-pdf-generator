@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import type { ClientBranding } from "@/lib/client-branding";
 
 type Stage = "empty" | "editing";
@@ -98,6 +98,7 @@ export default function PdfGenerator({ branding }: { branding: ClientBranding | 
   const [description, setDescription] = useState("");
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [busyDotCount, setBusyDotCount] = useState(0);
   const [message, setMessage] = useState(
     "Importe um anúncio para rever o conteúdo antes de gerar o PDF."
   );
@@ -116,6 +117,19 @@ export default function PdfGenerator({ branding }: { branding: ClientBranding | 
     description.trim().length > 0 &&
     selectedImages.length > 0 &&
     busy === "idle";
+  const busyDots = busy === "idle" ? "" : ".".repeat(busyDotCount);
+
+  useEffect(() => {
+    if (busy === "idle") {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setBusyDotCount((current) => (current + 1) % 4);
+    }, 500);
+
+    return () => window.clearInterval(intervalId);
+  }, [busy]);
 
   function setNotice(nextMessage: string, tone: MessageTone = "neutral") {
     setMessage(nextMessage);
@@ -139,6 +153,7 @@ export default function PdfGenerator({ branding }: { branding: ClientBranding | 
     const timeoutId = window.setTimeout(() => controller.abort(), 90000);
 
     try {
+      setBusyDotCount(0);
       setBusy("scraping");
       setNotice("A importar o anúncio e a recolher imagens.");
 
@@ -198,6 +213,7 @@ export default function PdfGenerator({ branding }: { branding: ClientBranding | 
     const timeoutId = window.setTimeout(() => controller.abort(), 90000);
 
     try {
+      setBusyDotCount(0);
       setBusy("generating");
       setNotice("A gerar o PDF com a seleção atual.");
 
@@ -375,7 +391,7 @@ export default function PdfGenerator({ branding }: { branding: ClientBranding | 
               aria-describedby="form-message"
             />
             <button type="submit" disabled={!canImport}>
-              {busy === "scraping" ? "A importar" : "Importar anúncio"}
+              {busy === "scraping" ? `A importar${busyDots}` : "Importar anúncio"}
             </button>
           </div>
         </form>
@@ -533,7 +549,7 @@ export default function PdfGenerator({ branding }: { branding: ClientBranding | 
                 onClick={handleGeneratePdf}
                 disabled={!canGenerate}
               >
-                {busy === "generating" ? "A gerar PDF" : "Gerar PDF"}
+                {busy === "generating" ? `A gerar PDF${busyDots}` : "Gerar PDF"}
               </button>
             </div>
           </section>

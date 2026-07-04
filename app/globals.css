@@ -57,21 +57,21 @@ button:disabled {
 
 .page-shell {
   min-height: 100vh;
-  padding: 28px;
+  padding: 0;
 }
 
 .hero-tool,
 .editor-shell {
-  min-height: calc(100vh - 56px);
+  min-height: 100vh;
 }
 
 .hero-tool {
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(245, 245, 242, 0.76)),
     var(--pdf-paper);
-  border: 1px solid var(--pdf-line);
-  border-radius: 8px;
-  box-shadow: var(--pdf-shadow);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -688,7 +688,7 @@ h1 {
 
 @media (max-width: 880px) {
   .page-shell {
-    padding: 14px;
+    padding: 0;
   }
 
   .login-page {
