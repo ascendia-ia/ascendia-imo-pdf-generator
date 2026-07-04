@@ -1,8 +1,17 @@
 import PdfGenerator from "./pdf-generator";
-import { getClientBranding } from "@/lib/client-branding";
+import { redirect } from "next/navigation";
+import { getPdfGeneratorAccess } from "@/lib/client-branding";
 
 export default async function Home() {
-  const branding = await getClientBranding();
+  const access = await getPdfGeneratorAccess();
 
-  return <PdfGenerator branding={branding} />;
+  if (!access.authenticated) {
+    redirect("/login");
+  }
+
+  if (!access.allowed) {
+    redirect("/no-access");
+  }
+
+  return <PdfGenerator branding={access.branding} />;
 }
