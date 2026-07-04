@@ -32,17 +32,19 @@ export default function LoginPage() {
   return (
     <main className="page-shell login-page">
       <section className="login-visual" aria-hidden="true">
-        <div className="login-dossier">
-          <span className="dossier-label">Dossier PDF</span>
-          <span className="dossier-line short" />
-          <span className="dossier-line" />
-          <span className="dossier-line" />
-          <span className="dossier-photo" />
-        </div>
-        <div className="login-dossier secondary">
-          <span className="dossier-label">Imo-PDF</span>
-          <span className="dossier-line" />
-          <span className="dossier-line short" />
+        <div className="login-preview">
+          <span className="preview-pill" />
+          <span className="preview-line short" />
+          <span className="preview-line" />
+          <span className="preview-line" />
+          <div className="preview-grid">
+            <span />
+            <span />
+            <span />
+            <span />
+            <span />
+            <span />
+          </div>
         </div>
       </section>
 
