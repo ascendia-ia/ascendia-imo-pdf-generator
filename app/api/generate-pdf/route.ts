@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getClientBranding } from "@/lib/client-branding";
+import { trackUsageEvent } from "@/lib/usage-events";
 import { isValidHttpUrl, normalizeFeatures, normalizeImageUrls } from "../../listing-utils";
 
 export const runtime = "nodejs";
@@ -230,6 +231,7 @@ function validatePayload(body: GeneratePdfBody): ValidationResult {
 }
 
 export async function POST(request: Request) {
+  const startedAt = Date.now();
   let body: GeneratePdfBody;
 
   try {
@@ -245,6 +247,12 @@ export async function POST(request: Request) {
   }
 
   if (process.env.N8N_MOCK_PDF === "true") {
+    await trackUsageEvent({
+      eventType: "pdf_generated",
+      title: validated.payload.title,
+      sourceUrl: validated.payload.sourceUrl,
+      durationMs: Date.now() - startedAt
+    });
     return mockPdf();
   }
 
@@ -294,6 +302,13 @@ export async function POST(request: Request) {
     if (contentType.toLowerCase().includes("application/pdf")) {
       const pdf = await n8nResponse.arrayBuffer();
 
+      await trackUsageEvent({
+        eventType: "pdf_generated",
+        title: validated.payload.title,
+        sourceUrl: validated.payload.sourceUrl,
+        durationMs: Date.now() - startedAt
+      });
+
       return pdfResponse(
         pdf,
         contentDispositionFromTitle(validated.payload.title)
@@ -327,6 +342,13 @@ export async function POST(request: Request) {
       }
 
       const pdf = await pdfResponseFromUrl.arrayBuffer();
+
+      await trackUsageEvent({
+        eventType: "pdf_generated",
+        title: validated.payload.title,
+        sourceUrl: validated.payload.sourceUrl,
+        durationMs: Date.now() - startedAt
+      });
 
       return pdfResponse(
         pdf,

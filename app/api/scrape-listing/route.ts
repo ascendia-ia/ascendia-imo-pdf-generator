@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { trackUsageEvent } from "@/lib/usage-events";
 import { isValidHttpUrl, normalizeListingDraft } from "../../listing-utils";
 
 export const runtime = "nodejs";
@@ -32,6 +33,7 @@ function mockListing(listingUrl: string) {
 }
 
 export async function POST(request: Request) {
+  const startedAt = Date.now();
   let body: ScrapeBody;
 
   try {
@@ -45,7 +47,14 @@ export async function POST(request: Request) {
   }
 
   if (process.env.N8N_MOCK_SCRAPE === "true") {
-    return mockListing(body.listingUrl);
+    const response = mockListing(body.listingUrl);
+    await trackUsageEvent({
+      eventType: "listing_imported",
+      title: "Apartamento T4 a venda na Estrada das Laranjeiras",
+      sourceUrl: body.listingUrl,
+      durationMs: Date.now() - startedAt
+    });
+    return response;
   }
 
   const webhookUrl = process.env.N8N_SCRAPE_WEBHOOK_URL;
@@ -104,6 +113,13 @@ export async function POST(request: Request) {
         502
       );
     }
+
+    await trackUsageEvent({
+      eventType: "listing_imported",
+      title: draft.title,
+      sourceUrl: draft.sourceUrl ?? body.listingUrl,
+      durationMs: Date.now() - startedAt
+    });
 
     return NextResponse.json(draft);
   } catch (error) {
