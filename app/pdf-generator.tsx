@@ -74,6 +74,28 @@ function selectedFirst(images: GalleryImage[]) {
   ];
 }
 
+function moveToggledImage(images: GalleryImage[], id: string) {
+  const target = images.find((image) => image.id === id);
+
+  if (!target || target.broken) {
+    return images;
+  }
+
+  const toggled = { ...target, selected: !target.selected };
+  const remaining = images.filter((image) => image.id !== id);
+  const selected = remaining.filter((image) => image.selected && !image.broken);
+  const unselected = remaining.filter((image) => !image.selected && !image.broken);
+  const broken = remaining.filter((image) => image.broken);
+
+  if (toggled.selected) {
+    selected.push(toggled);
+  } else {
+    unselected.push(toggled);
+  }
+
+  return [...selected, ...unselected, ...broken];
+}
+
 async function readError(response: Response, fallback: string) {
   try {
     const payload = await response.json();
@@ -271,13 +293,7 @@ export default function PdfGenerator({ branding }: { branding: ClientBranding | 
   }
 
   function toggleImage(id: string) {
-    setImages((current) =>
-      current.map((image) =>
-        image.id === id && !image.broken
-          ? { ...image, selected: !image.selected }
-          : image
-      )
-    );
+    setImages((current) => moveToggledImage(current, id));
   }
 
   function reorderImages(activeId: string, targetId: string) {
